@@ -3,6 +3,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiam9obiIsI
 
 ###
 
+POST http://localhost:4000/register
+Content-Type: application/json
+
+{
+    "name": "userA",
+    "email": "userF@mail.com",
+    "password": "userC"
+}
+
+
+
+###
 POST http://localhost:4000/token
 Content-Type: application/json
 
@@ -27,5 +39,6 @@ POST http://localhost:4000/login
 Content-Type: application/json
 
 {
-    "userName": "john"
+    "email": "userF@mail.com",
+    "password": "userC"
 }
