@@ -34,12 +34,15 @@ app.post('/token', (req,res)=> {
     })
 })
 
-app.delete('/logout', (req,res)=> {
+app.delete('/api/logout', (req,res)=> {
     refreshTokens= refreshTokens.filter(token=>token!==req.body.token)
     res.sendStatus(204)
 })
+app.get('/api', (req,res)=> {
+    res.status(200).json('Success')
+})
 
-app.post('/register', (req,res)=>{
+app.post('/api/register', (req,res)=>{
     const { name, email, password}= req.body;
     if(!name || !email || !password)
         return res.status(400).json({message: "Invalid field"})
@@ -78,7 +81,7 @@ app.post('/register', (req,res)=>{
 
 })
 
-app.post('/login', (req,res)=>{
+app.post('/api/login', (req,res)=>{
     const {email, password}= req.body;
     if(!email || !password)
         return res.status(400).json({message: "Invalid field"})
@@ -90,7 +93,7 @@ app.post('/login', (req,res)=>{
         .then(isMatch=>{
             if(!isMatch) return res.status(400).json({message: 'Invalid Credential!!'});
             const accessToken = generateAccessToken({id: user._id});
-            const refreshToken = jwt.sign({id: user._id}, process.env.REFRESH_TOKEN_SECRET,{expiresIn: '500s'});
+            const refreshToken = jwt.sign({id: user._id}, process.env.REFRESH_TOKEN_SECRET,{expiresIn: '50s'});
             User.findOneAndUpdate({_id: user._id},{refresh_token: refreshToken}, {new:true})
             .then(user=>console.log(user));
             res.json({
