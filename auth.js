@@ -23,7 +23,7 @@ mongoose.connect(process.env.MONGOURI,{
     .then(()=> console.log('Connected to Database!!'))
     .catch(err=>console.log(err))    
 
-app.post('/token', (req,res)=> {
+app.post('/api/token', (req,res)=> {
     const refreshToken = req.body.token;
     if (refreshToken== null) return res.sendStatus(401);
     if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
@@ -31,6 +31,16 @@ app.post('/token', (req,res)=> {
         if (err) return res.sendStatus(403);
         const accessToken = generateAccessToken({name: user.name});
         res.json({accessToken:accessToken})
+    })
+})
+
+app.post('/api/verify', (req,res)=> {
+    const token = req.body.token;
+    console.log(req.body)
+    if (token== null) return res.sendStatus(401);
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err,user)=>{
+        if (err) return res.sendStatus(403);
+        res.status(200).json('success');
     })
 })
 
@@ -57,7 +67,6 @@ app.post('/api/register', (req,res)=>{
         });
 
         bcrypt.hash(newUser.password, 10, (err,hash)=>{
-            console.log(hash)
             newUser.password = hash;
             newUser.save()
             .then(user=>{
@@ -110,8 +119,8 @@ app.post('/api/login', (req,res)=>{
 })
 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '20s'});
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '70s'});
 }
 
 
-app.listen(4000,()=>console.log('Auth server started'))
+app.listen(4001,()=>console.log('Auth server started'))
