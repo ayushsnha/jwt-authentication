@@ -54,6 +54,7 @@ app.get('/api', (req,res)=> {
 
 app.post('/api/register', (req,res)=>{
     const { name, email, password}= req.body;
+    console.log(req.body)
     if(!name || !email || !password)
         return res.status(400).json({message: "Invalid field"})
 
@@ -123,4 +124,4 @@ function generateAccessToken(user) {
 }
 
 
-app.listen(4001,()=>console.log('Auth server started'))
+app.listen(4000,()=>console.log('Auth server started'))
